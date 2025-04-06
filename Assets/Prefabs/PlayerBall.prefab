@@ -98,6 +98,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isInputActive: 0
   hitLine: {fileID: 1477409665366172434}
+  hitStrengthCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 10
+      inSlope: 13.514704
+      outSlope: 13.514704
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.055844128
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &5367764182304200523
 GameObject:
   m_ObjectHideFlags: 0
@@ -234,6 +258,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4478793658412034032, guid: a21d45637293c134f9a1886cd7c2eb67, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4840676397614667031, guid: a21d45637293c134f9a1886cd7c2eb67, type: 3}
+      propertyPath: m_Positions.Array.data[0].z
+      value: 0.58
+      objectReference: {fileID: 0}
+    - target: {fileID: 4840676397614667031, guid: a21d45637293c134f9a1886cd7c2eb67, type: 3}
+      propertyPath: m_Positions.Array.data[1].z
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4840676397614667031, guid: a21d45637293c134f9a1886cd7c2eb67, type: 3}

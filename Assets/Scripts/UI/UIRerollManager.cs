@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-public class UIScoreManager : MonoBehaviour
+public class UIRerollManager : MonoBehaviour
 {
     [SerializeField]
     private StateData stateData;
@@ -10,22 +10,22 @@ public class UIScoreManager : MonoBehaviour
 
     void Start()
     {
-        stateData.onScoreChanged += HandleScoreChange;
-        HandleScoreChange(0, 0);
+        stateData.onRerollsChanged += HandleRerollsChange;
+        HandleRerollsChange(0, 0);
     }
 
     void OnEnable()
     {
-        HandleScoreChange(0, stateData.currentScore);
+        HandleRerollsChange(0, stateData.currentRerolls);
     }
 
     void OnDestroy()
     {
-        stateData.onScoreChanged -= HandleScoreChange;
+        stateData.onRerollsChanged -= HandleRerollsChange;
     }
 
 
-    private void HandleScoreChange(int delta, int fullScore)
+    private void HandleRerollsChange(int delta, int fullScore)
     {
         var score = "";
         var fullScoreAsString = fullScore.ToString();

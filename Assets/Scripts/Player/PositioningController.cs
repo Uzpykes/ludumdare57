@@ -29,6 +29,14 @@ public class PositioningController : MonoBehaviour
         poolBallInstance.SetActive(false);
     }
 
+    public void Disable()
+    {
+        isActive = false;
+        poolGhostInstance.SetActive(false);
+
+        InputSystem.actions["Fire"].performed -= HandleSpawn;
+    }
+
     public void Enable(Die die)
     {
         targetDie = die;

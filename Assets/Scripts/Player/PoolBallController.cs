@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
@@ -16,6 +17,8 @@ public class PoolBallController : MonoBehaviour
     [SerializeField]
     private LineRenderer hitLine;
     private StateData stateData;
+    [SerializeField]
+    private AnimationCurve hitStrengthCurve;
 
     void Awake()
     {
@@ -23,6 +26,15 @@ public class PoolBallController : MonoBehaviour
         hitLine.gameObject.SetActive(false);
         stateData = FindAnyObjectByType<StateData>();
         DieManager.Instance.onDieThrow += HandleThrow;
+        stateData.onStateChanged += HandleGameState;
+    }
+
+    private void HandleGameState(GameState state)
+    {
+        if (state == GameState.GameOver || state == GameState.GameWon)
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     private void HandleThrow()
@@ -73,15 +85,17 @@ public class PoolBallController : MonoBehaviour
         if (plane.Raycast(r, out float enter))
         {
             var pos = r.GetPoint(enter);
-            aimDirection = transform.position - pos;
-            canHit = aimDirection.sqrMagnitude > 0.03f;
+            var dir = (transform.position - pos);
+            var mag = Mathf.Min(dir.magnitude / 2f, 0.58f);
+            aimDirection = dir.normalized * mag;
+            canHit = aimDirection.sqrMagnitude > 0.001f;
             if (hitLine.gameObject.activeSelf != canHit)
             {
                 hitLine.gameObject.SetActive(canHit);
-                hitLine.SetPosition(0, transform.position);
+                hitLine.SetPosition(1, transform.position);
             }
 
-            hitLine.SetPosition(1, aimDirection + transform.position);
+            hitLine.SetPosition(0, aimDirection.normalized * Mathf.Max(0.15f, aimDirection.magnitude) + transform.position);
 
 #if UNITY_EDITOR
             if (canHit)
@@ -108,7 +122,7 @@ public class PoolBallController : MonoBehaviour
             hitLine.gameObject.SetActive(false);
             isInputActive = false;
             rb.isKinematic = false;
-            rb.AddForce(aimDirection, ForceMode.Impulse);
+            rb.AddForce(aimDirection.normalized * hitStrengthCurve.Evaluate(aimDirection.magnitude), ForceMode.Impulse);
         }
     }
 
@@ -118,7 +132,7 @@ public class PoolBallController : MonoBehaviour
     {
         if (trackingCoroutine == null && !rb.isKinematic)
         {
-            if (rb.linearVelocity.sqrMagnitude < 0.1f && rb.angularVelocity.sqrMagnitude < 0.1f)
+            if (rb.linearVelocity.sqrMagnitude < 0.5f && rb.angularVelocity.sqrMagnitude < 0.5f)
             {
                 trackingCoroutine = StartCoroutine(TrackDie());
             }
@@ -133,7 +147,7 @@ public class PoolBallController : MonoBehaviour
 
         while (t < restCooldown)
         {
-            if (rb.linearVelocity.sqrMagnitude > 0.1f || rb.angularVelocity.sqrMagnitude > 0.1f)
+            if (rb.linearVelocity.sqrMagnitude > 0.5f || rb.angularVelocity.sqrMagnitude > 0.5f)
             {
                 trackingCoroutine = null;
                 yield break;
@@ -153,6 +167,8 @@ public class PoolBallController : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
+        if (stateData.currentState != GameState.Game)
+            return;
         if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Floor"))
         {
             isInputActive = false;

@@ -18,6 +18,17 @@ public class UICapturedBalls : MonoBehaviour
         stateData.onBallCaptured += HandleBallCapture;
     }
 
+    void OnEnable()
+    {
+        foreach (var ball in Balls)
+        {
+            ball.HideCaptured();
+            if (stateData.capturedBalls.ContainsKey(ball.type) && stateData.capturedBalls[ball.type] > 0)
+                ball.ShowCaptured();
+        }
+
+    }
+
     void OnDestroy()
     {
         stateData.onBallCaptured -= HandleBallCapture;

@@ -28,7 +28,6 @@ public class BallSpawnEye : ABaseEye
             DieManager.Instance.ReportBallClearance(faceIndex, eyeIndex);
             Destroy(this.gameObject);
             DieManager.Instance.EvaluateFaceClearance();
-            Debug.Log("TODO: Add score, or send one level above");
         }
     }
 }

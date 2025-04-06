@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-public class UIScoreManager : MonoBehaviour
+public class UIFreeHitsManager : MonoBehaviour
 {
     [SerializeField]
     private StateData stateData;
@@ -10,22 +10,22 @@ public class UIScoreManager : MonoBehaviour
 
     void Start()
     {
-        stateData.onScoreChanged += HandleScoreChange;
-        HandleScoreChange(0, 0);
+        stateData.onFreeHitsChanged += HandleFreeHitsChange;
+        HandleFreeHitsChange(0, 0);
     }
 
     void OnEnable()
     {
-        HandleScoreChange(0, stateData.currentScore);
+        HandleFreeHitsChange(0, stateData.currentFreeHits);
     }
 
     void OnDestroy()
     {
-        stateData.onScoreChanged -= HandleScoreChange;
+        stateData.onFreeHitsChanged -= HandleFreeHitsChange;
     }
 
 
-    private void HandleScoreChange(int delta, int fullScore)
+    private void HandleFreeHitsChange(int delta, int fullScore)
     {
         var score = "";
         var fullScoreAsString = fullScore.ToString();

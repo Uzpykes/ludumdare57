@@ -46,4 +46,9 @@ public class Die : MonoBehaviour
 
         return faceRenderer.faces[maxIndex];
     }
+
+    public void EnableDifficulty()
+    {
+
+    }
 }

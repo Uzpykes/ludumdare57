@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Mono.Cecil.Cil;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class DieManager : MonoBehaviour
 {
@@ -28,6 +30,8 @@ public class DieManager : MonoBehaviour
     private PositioningController positioningController;
     [SerializeField]
     private StateData stateData;
+    [SerializeField]
+    private DifficultyController difficultyController;
 
     private int depth = -1;
     private bool dieHasSettled = false;
@@ -46,36 +50,67 @@ public class DieManager : MonoBehaviour
         }
 
         tree = new();
+        stateData.onStateChanged += HandleGameState;
+        InputSystem.actions["Reroll"].performed += HandleReroll;
     }
 
-    void OnGUI()
+    void OnDestroy()
     {
-        GUILayout.Label($"Depth: {stateData.currentDepth}, Hit Chances: {stateData.currentFreeHits}, Rerolls: {stateData.currentRerolls}, Score: {stateData.currentScore}");
+        InputSystem.actions["Reroll"].performed -= HandleReroll;
+    }
 
-        if (stateData.currentDepth == 0 && GUILayout.Button("Spawn Die"))
+    private void HandleGameState(GameState state)
+    {
+        if (state == GameState.Game)
         {
-            if (instance != null)
-                Destroy(instance.gameObject);
             stateData.AddDepth(1);
             ThrowDie(CreateNewDie(DiceConfiguration.Create(stateData.currentDepth), 0, 0));
         }
-
-        if ((current != null) && GUILayout.Button("Return"))
+        else if (state == GameState.GameOver || state == GameState.GameWon)
         {
-            ReturnToPreviousDepth();
-        }
-
-        if (stateData.currentRerolls > 0 && GUILayout.Button("Reroll"))
-        {
-            stateData.AddReroll(-1);
-            ThrowDie(instance);
+            CleanupCurrent();
         }
     }
+
+    private void HandleReroll(InputAction.CallbackContext ctx)
+    {
+        if (dieHasSettled && stateData.currentRerolls > 0 && stateData.currentState == GameState.Game)
+        {
+            positioningController.Disable();
+            stateData.AddReroll(-1);
+            ThrowDie(instance, 1.4f);
+        }
+    }
+
+    // void OnGUI()
+    // {
+    //     GUILayout.Label($"Depth: {stateData.currentDepth}, Hit Chances: {stateData.currentFreeHits}, Rerolls: {stateData.currentRerolls}, Score: {stateData.currentScore}");
+
+    //     if (stateData.currentDepth == 0 && GUILayout.Button("Spawn Die"))
+    //     {
+    //         if (instance != null)
+    //             Destroy(instance.gameObject);
+    //         stateData.AddDepth(1);
+    //         ThrowDie(CreateNewDie(DiceConfiguration.Create(stateData.currentDepth), 0, 0));
+    //     }
+
+    //     if ((current != null) && GUILayout.Button("Return"))
+    //     {
+    //         ReturnToPreviousDepth();
+    //     }
+
+    //     if (stateData.currentRerolls > 0 && GUILayout.Button("Reroll"))
+    //     {
+    //         stateData.AddReroll(-1);
+    //         ThrowDie(instance);
+    //     }
+    // }
 
     private void CleanupCurrent()
     {
         if (instance != null)
         {
+            difficultyController.Disable();
             current.position = instance.transform.position;
             current.rotation = instance.transform.rotation;
             Destroy(instance.gameObject);
@@ -96,8 +131,9 @@ public class DieManager : MonoBehaviour
         return instance;
     }
 
-    private void ThrowDie(Die d)
+    private void ThrowDie(Die d, float forceMultiplier = 1f)
     {
+        difficultyController.Disable();
         d.rb.excludeLayers = 1 << LayerMask.NameToLayer("PoolBall") | 1 << LayerMask.NameToLayer("PlayerBall");
         if (throwTime != null)
         {
@@ -119,8 +155,8 @@ public class DieManager : MonoBehaviour
 
         var rb = d.rb;
         rb.isKinematic = false;
-        rb.AddExplosionForce(5, Vector3.zero + Vector3.one * UnityEngine.Random.Range(0.1f, 0.2f), 10, 1f, ForceMode.Impulse);
-        rb.AddTorque(UnityEngine.Random.Range(.2f, .3f), UnityEngine.Random.Range(-.1f, 0.1f), UnityEngine.Random.Range(.5f, .1f), ForceMode.Impulse);
+        rb.AddExplosionForce(5 * forceMultiplier, Vector3.zero + Vector3.one * UnityEngine.Random.Range(0.1f, 0.2f), 10, 10f, ForceMode.Impulse);
+        rb.AddTorque(UnityEngine.Random.Range(.5f, 1f), UnityEngine.Random.Range(-1f, 1f), UnityEngine.Random.Range(.5f, .1f), ForceMode.Impulse);
     }
 
 
@@ -161,6 +197,11 @@ public class DieManager : MonoBehaviour
 
     public void RequestDiceZoomOutTransition(Transform target, Action oncomplete)
     {
+        if (stateData.currentDepth == 1)
+        {
+            stateData.SetGameState(GameState.GameOver);
+            return;
+        }
         cameraController.PlayDiceZoomOutTransition(target, () => ReturnToPreviousDepth());
     }
 
@@ -177,6 +218,7 @@ public class DieManager : MonoBehaviour
         }
         else
         {
+            stateData.AddDepth(1);
             ApplyConfiguration(c);
         }
         onComplete();
@@ -235,6 +277,7 @@ public class DieManager : MonoBehaviour
         yield return new WaitForFixedUpdate();
 
         positioningController.Enable(instance);
+        difficultyController.Enable(instance);
         var ins = instance.GetTopFace().instances;
         foreach (var i in ins)
         {

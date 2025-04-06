@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4834600507406101580
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7502723858354775655}
+  - component: {fileID: 7305548218660973257}
+  m_Layer: 0
+  m_Name: DifficultyController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7502723858354775655
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4834600507406101580}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7305548218660973257
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4834600507406101580}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7377a73a2f131f43aaad643c1083fd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  difficultyConfigs:
+  - difficultyPrefab: {fileID: 8032720621563933729, guid: 4b6dba1199541fd4b9ba9e342abf27e6, type: 3}
+    affectedDepths: {x: 0, y: 2}
+  - difficultyPrefab: {fileID: 8032720621563933729, guid: b1f0805a938163644abf684ea198e792, type: 3}
+    affectedDepths: {x: 3, y: 4}
+  - difficultyPrefab: {fileID: 8032720621563933729, guid: 799363f5e7e499c498ea266db2f7d173, type: 3}
+    affectedDepths: {x: 5, y: 6}
+  - difficultyPrefab: {fileID: 8032720621563933729, guid: 60059b6dc7c8c44468e02a971e2053c2, type: 3}
+    affectedDepths: {x: 7, y: 999}
+  stateData: {fileID: 0}
