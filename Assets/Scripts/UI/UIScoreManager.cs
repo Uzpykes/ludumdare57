@@ -11,7 +11,7 @@ public class UIScoreManager : MonoBehaviour
     void Start()
     {
         stateData.onScoreChanged += HandleScoreChange;
-        HandleScoreChange(0, 0);
+        // HandleScoreChange(0, 0);
     }
 
     void OnEnable()

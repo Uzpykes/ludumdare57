@@ -1,16 +1,18 @@
-using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIEndGameText : MonoBehaviour
 {
     public StateData stateData;
-    public TextMeshProUGUI text;
+    public Image image;
+    public Sprite winSprite;
+    public Sprite loseSprite;
 
     void OnEnable()
     {
         if (stateData.currentState == GameState.GameOver)
-            text.text = "you lost";
+            image.sprite = loseSprite;
         else if (stateData.currentState == GameState.GameWon)
-            text.text = "you won";
+            image.sprite = winSprite;
     }
 }

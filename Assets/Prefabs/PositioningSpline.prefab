@@ -62,9 +62,9 @@ MonoBehaviour:
   - m_EditModeType: 1
     m_Knots:
     - Position:
-        x: 0.4815
+        x: 0.37472385
         y: 0
-        z: -0.3914
+        z: -0.304745
       TangentIn:
         x: 0
         y: 0
@@ -80,9 +80,9 @@ MonoBehaviour:
           z: 0
           w: 1
     - Position:
-        x: 0.4797
+        x: 0.37332344
         y: 0
-        z: 0.3923
+        z: 0.3050013
       TangentIn:
         x: 0
         y: 0
@@ -98,9 +98,9 @@ MonoBehaviour:
           z: 0
           w: 1
     - Position:
-        x: 0.393
+        x: 0.30586776
         y: 0
-        z: 0.4786
+        z: 0.37214574
       TangentIn:
         x: 0
         y: 0
@@ -116,9 +116,9 @@ MonoBehaviour:
           z: 0
           w: 1
     - Position:
-        x: -0.3898
+        x: -0.30317828
         y: 0
-        z: 0.4801
+        z: 0.37331277
       TangentIn:
         x: 0
         y: 0
@@ -134,9 +134,9 @@ MonoBehaviour:
           z: 0
           w: -0.008546066
     - Position:
-        x: -0.4786
+        x: -0.37226778
         y: 0
-        z: 0.3912
+        z: 0.30414546
       TangentIn:
         x: 0
         y: 0
@@ -152,9 +152,9 @@ MonoBehaviour:
           z: 0
           w: -0.008545997
     - Position:
-        x: -0.4806
+        x: -0.37382385
         y: 0
-        z: -0.3935
+        z: -0.30637884
       TangentIn:
         x: 0
         y: 0
@@ -170,9 +170,9 @@ MonoBehaviour:
           z: 0
           w: -0.008546034
     - Position:
-        x: -0.3888
+        x: -0.3024002
         y: 0
-        z: -0.4821
+        z: -0.37531278
       TangentIn:
         x: 0
         y: 0
@@ -188,9 +188,9 @@ MonoBehaviour:
           z: 0
           w: -0.008544022
     - Position:
-        x: 0.3927
+        x: 0.30563435
         y: 0
-        z: -0.4791
+        z: -0.37297866
       TangentIn:
         x: 0
         y: 0

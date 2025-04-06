@@ -8,7 +8,7 @@ public class StateData : MonoBehaviour
 
     public int currentScore { get; private set; }
     public int currentDepth { get; private set; }
-    public int currentRerolls { get; private set; } = 50;
+    public int currentRerolls { get; private set; }
     public int currentFreeHits { get; private set; }
     public Dictionary<DiceFaceSlot, int> capturedBalls { get; private set; } = new();
 
@@ -67,7 +67,7 @@ public class StateData : MonoBehaviour
     {
         currentScore = 0;
         currentDepth = 0;
-        currentRerolls = 50;
+        currentRerolls = 0;
         currentFreeHits = 0;
         capturedBalls.Clear();
     }

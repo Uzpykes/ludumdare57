@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using Mono.Cecil.Cil;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -33,7 +31,6 @@ public class DieManager : MonoBehaviour
     [SerializeField]
     private DifficultyController difficultyController;
 
-    private int depth = -1;
     private bool dieHasSettled = false;
     private bool wasThrown = false;
 
@@ -69,6 +66,8 @@ public class DieManager : MonoBehaviour
         else if (state == GameState.GameOver || state == GameState.GameWon)
         {
             CleanupCurrent();
+            tree = new();
+            current = null;
         }
     }
 
@@ -114,13 +113,13 @@ public class DieManager : MonoBehaviour
             current.position = instance.transform.position;
             current.rotation = instance.transform.rotation;
             Destroy(instance.gameObject);
+            instance = null;
         }
     }
 
     private Die CreateNewDie(DiceConfiguration con, int faceIndex, int eyeIndex)
     {
         var config = con;
-        depth++;
         if (current == null)
             tree.AddRoot(config);
         else
@@ -197,7 +196,7 @@ public class DieManager : MonoBehaviour
 
     public void RequestDiceZoomOutTransition(Transform target, Action oncomplete)
     {
-        if (stateData.currentDepth == 1)
+        if (stateData.currentDepth == 0)
         {
             stateData.SetGameState(GameState.GameOver);
             return;
@@ -323,6 +322,7 @@ public class DieManager : MonoBehaviour
     //Check if face has no more balls left
     public void EvaluateFaceClearance()
     {
+        if (current == null || instance == null) return;
         var topFace = instance.GetTopFace();
         var topFaceInstances = topFace.instances;
         var poolBallCount = 0;
@@ -341,6 +341,7 @@ public class DieManager : MonoBehaviour
         if (poolBallCount == 0)
         {
             stateData.AddReroll(1);
+            stateData.AddScore(((stateData.currentDepth + 1) * topFace.dieEyes.Count - 1) * 10);
             config.EmptyFaceRerollProvided = true;
         }
     }
@@ -351,7 +352,7 @@ public class DieManager : MonoBehaviour
         var type = current.faces[faceIndex].EyeType[eyeIndex];
         current.faces[faceIndex].EyeType[eyeIndex] = DiceFaceSlot.None;
 
-        stateData.AddScore(stateData.currentDepth * (((int)type) - 1));
+        stateData.AddScore((stateData.currentDepth + 1) * (((int)type) - 1));
         stateData.AddBall(type);
     }
 }

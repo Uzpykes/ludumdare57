@@ -62,6 +62,7 @@ public class StateManager : MonoBehaviour
     {
         if (stateData.currentState == GameState.MainMenu || stateData.currentState == GameState.GameOver || stateData.currentState == GameState.GameWon)
         {
+            stateData.ResetData();
             stateData.SetGameState(GameState.Game);
         }
     }
