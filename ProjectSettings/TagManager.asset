@@ -14,12 +14,12 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Die
+  - DieEye
+  - PoolBall
+  - PlayerBall
+  - Hole
+  - Floor
   - 
   - 
   - 
@@ -43,3 +43,4 @@ TagManager:
     locked: 0
   m_RenderingLayers:
   - Default
+  - Die
